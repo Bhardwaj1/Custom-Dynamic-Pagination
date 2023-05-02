@@ -7,7 +7,7 @@ function App() {
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(2);
   const [page, setPage] = useState(1);
-  const [bg,setbg]=useState('red');
+  const [bg, setbg] = useState("red");
   console.log({ products });
 
   // Api call
@@ -51,10 +51,9 @@ function App() {
     console.log({ pageNo });
     setStart(pageNo * 2);
     setEnd((pageNo + 1) * 2);
-    setPage(pageNo+1);
+    setPage(pageNo + 1);
 
-    setbg('blue');
-
+    setbg("blue");
   };
 
   return (
@@ -81,18 +80,39 @@ function App() {
       </table>
       <div style={{ display: "flex" }}>
         <button
-          style={{ width: 100}}
+          style={{ width: 100 }}
           onClick={previousPage}
           disabled={start <= 0}
         >
           Previous
         </button>
-        {products.slice(0, products.length / 2).map((item) => {
-          return (
-            <button style={{ width: 50,backgroundColor:item.id===page&&"red"}} onClick={() => gotoPage(item.id - 1)}>
-              {item.id}
-            </button>
-          );
+
+        {products.map((item, index) => {
+          // show only the current, previous and next two pages, along with ellipses
+          if (
+            index === 0 ||
+            index === products.length - 1 ||
+            (index >= page - 2 && index <= page + 2)
+          ) {
+            return (
+              <button
+                key={index}
+                style={{ width: 50, backgroundColor: index === page && "red" }}
+                onClick={() => gotoPage(index)}
+              >
+                {index + 1}
+              </button>
+            );
+          } else if (
+            index === page - 3 ||
+            index === page + 3 ||
+            index === 1 ||
+            index === products.length - 2
+          ) {
+            // show an ellipsis instead of the hidden page numbers
+            return <button disabled>...</button>;
+          }
+          return null;
         })}
 
         <button
